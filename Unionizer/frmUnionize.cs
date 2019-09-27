@@ -117,7 +117,7 @@ namespace Unionizer
             if (MessageBox.Show("begin unionize?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.No)
                 return;
 
-            List<string> errors = new List<string>();
+            StringBuilder errors = new StringBuilder();
             foreach (string filename in lstAffectedFiles.DataSource as List<string>)
             {
                 try
@@ -129,11 +129,14 @@ namespace Unionizer
                     string error = "file: " + filename + " exception: " + ex.Message;
                     if (ex.InnerException != null)
                         error += " (inner exception: " + ex.InnerException.Message + ")";
-                    errors.Add(error);
+                    errors.AppendLine(error);
                 }
             }
-            if (errors.Count > 0)
-                MessageBox.Show("There were errors processing the following files: " + Environment.NewLine + errors);
+            
+            if (errors.Length > 0)
+                MessageBox.Show("There were errors processing the following files: " + Environment.NewLine + errors.ToString());
+            else
+                MessageBox.Show("Unionize successful.");
 
             loadUnionizableFiles();
         }
